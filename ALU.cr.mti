@@ -1,0 +1,15 @@
+C:/programare/verilog/ALU/and_gate.v {1 {vlog -work work -stats=none C:/programare/verilog/ALU/and_gate.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module and_gate
+
+Top level modules:
+	and_gate
+
+} {} {}} C:/programare/verilog/ALU/and_gate_tb.v {1 {vlog -work work -stats=none C:/programare/verilog/ALU/and_gate_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module and_gate_tb
+
+Top level modules:
+	and_gate_tb
+
+} {} {}}
