@@ -1,0 +1,8 @@
+D:/programare/verilog/ALU/adder_tb.v {1 {vlog -work work -stats=none {D:\programare\verilog\ALU\adder_tb.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module adder_tb
+
+Top level modules:
+	adder_tb
+
+} {} {}}
