@@ -9,4 +9,4 @@ work/
 *.mti        # ModelSim temporary index file
 *.mpf        # ModelSim project file
 *.bak        # Backup files (created during simulation or code editing)
-transcript   # Transcript file, which logs command outputs in ModelSim
+transcript*   # Transcript file, which logs command outputs in ModelSim
