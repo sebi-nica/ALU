@@ -1,17 +1,17 @@
-module adder #(parameter w = 8) ( 
-    input [w-1:0] x, y, 
+module adder( 
+    input [7:0] x, y, 
     input flag,
-    output [w:0] z
+    output [8:0] z
 );
-    wire [w:0] x1, y1;
-    wire [w+1:0] carry;
+    wire [8:0] x1, y1;
+    wire [9:0] carry;
     assign carry[0] = flag;
-    assign x1 = {x[w-1], x};
-    assign y1 = {y[w-1], y} ^ {(w+1){flag}};
+    assign x1 = {x[7], x};
+    assign y1 = {y[7], y} ^ {(9){flag}};
 
     genvar i;
     generate
-        for (i = 0; i <= w; i = i + 1) begin : fac_loop
+        for (i = 0; i <= 8; i = i + 1) begin : fac_loop
             fac fac_inst (
                 .x(x1[i]), 
                 .y(y1[i]), 
