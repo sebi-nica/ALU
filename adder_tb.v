@@ -3,14 +3,14 @@ module adder_tb;
     reg clk;
     reg rst;
     reg [7:0] A, B;
-    reg flag;
+    reg op;
     wire [8:0] sum;
 
     // Instantiate the adder module
     adder add_sub (
         .x(A),
         .y(B),
-        .flag(flag),
+        .op(op),
         .z(sum)
     );
 
@@ -26,7 +26,7 @@ module adder_tb;
         rst = 0;
         A = 8'b00000000;
         B = 8'b00000000;
-        flag = 0;
+        op = 0;
 
         // Apply reset
         rst = 1;
@@ -37,41 +37,41 @@ module adder_tb;
         A = 8'b00001000;  // 8
         B = 8'b11111011;  // -5 in C2
         #5;
-        flag = 1;
+        op = 1;
         #5;
-        flag = 0;
+        op = 0;
 
         // Test case 2: -1 + -1 (Overflow check)
         A = 8'b11111111;  // -1 in C2
         B = 8'b11111111;  // -1 in C2
         #5;
-        flag = 1;
+        op = 1;
         #5;
-        flag = 0;
+        op = 0;
 
         // Test case 3: -128 + -1 (Overflow check)
         A = 8'b10000000;  // -128 in C2
         B = 8'b11111111;  // -1 in C2
         #5;
-        flag = 1;
+        op = 1;
         #5;
-        flag = 0;
+        op = 0;
 
         // Test case 4: 127 + 1 (No overflow, normal case)
         A = 8'b01111111;  // 127
         B = 8'b00000001;  // 1
         #5;
-        flag = 1;
+        op = 1;
         #5;
-        flag = 0;
+        op = 0;
 
         // Test case 5: -64 + 32
         A = 8'b11000000;  // -64 in C2
         B = 8'b00100000;  // 32 in C2
         #5;
-        flag = 1;
+        op = 1;
         #5;
-        flag = 0;
+        op = 0;
 
         // End simulation
         $stop;
