@@ -4,8 +4,8 @@
  */
 
 module cnt (
-  input rst,
   input clk,
+  input rst,
   input incr,
   output [2:0] out
 );
