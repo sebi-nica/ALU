@@ -23,6 +23,8 @@ wire aq_bit_in, aq_bit_out;
 assign aq_in = in;
 assign aq_bit_in = c6;
 
+wire qm1_out;
+
 wire[7:0]m_in, m_out;
 
 wire[7:0] add_in1, add_in2;
@@ -53,6 +55,14 @@ assign add_op = ~op[1] & op[0] | c3;
         .sel({c4, ~op[0]}),
         .out(aq_out),
         .bit_out(aq_bit_out)
+    );
+
+    reg_1 Qm1(
+        .in(aq_bit_out),
+        .load(c4),
+        .clk(clk),
+        .rst(rst),
+        .out(qm1_out)
     );
 
     reg_8 M(
