@@ -6,8 +6,8 @@ module control_unit (
     input q0, // info provided by the arithmetic unit
     input qm1,
     input a7,
-    output c0,// load input to Q
-    output c1,// load input to M
+    output c0,// load input to M and set all other regs to 0
+    output c1,// load input to Q
     output c2,// load result from adder to A
     output c3,// tell adder which operation to do 0=add 1=sub
     output c4,// = enable_shift = while this is on, A and Q will shift on every clock cycle, shift direction depends on operation 
@@ -33,7 +33,7 @@ module control_unit (
 
     reg_4 state_reg(
         .clk(clk),
-        .rst(rst),
+        .rst(rst | ~op[1]), // if operation performed is add/sub, the state registers will not work
         .in(state_nxt),
         .load(op[1]), // states can be changed only when operation is mul/div
         .out(state_curr)
@@ -44,6 +44,7 @@ module control_unit (
         .cnt_done(cnt_done),
         .q0(q0),
         .qm1(qm1),
+        .a7(a7),
         .state_nxt(state_nxt),
         .c0(c0_mul),
         .c1(c1_mul),
