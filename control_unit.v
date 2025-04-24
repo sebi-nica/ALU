@@ -6,6 +6,7 @@ module control_unit (
     input q0, // info provided by the arithmetic unit
     input qm1,
     input a7,
+    input start,
     output c0,// load input to M and set all other regs to 0
     output c1,// load input to Q
     output c2,// load result from adder to A
@@ -13,39 +14,65 @@ module control_unit (
     output c4,// = enable_shift = while this is on, A and Q will shift on every clock cycle, shift direction depends on operation 
     output c5,// = increment counter = while this is on, cnt will increment on every clock cycle
     output c6,// input bit for bit shift
-    output c7 // load AQ to output
+    output c7, // load AQ to output
+    output [3:0] state // debug
 );
 
     wire[3:0] state_nxt, state_curr;
+    wire[3:0] state_nxt_add_sub, state_nxt_mul, state_nxt_div;
+
+    assign state = state_curr;
+
+    assign state_nxt = ({4{~op[1]}} & state_nxt_add_sub) |
+                       ({4{op[1] & ~op[0]}} & state_nxt_mul) |
+                       ({4{op[1] & op[0]}} & state_nxt_div); // choose the next state based on operation
+    wire c0_add_sub, c1_add_sub, c2_add_sub, c3_add_sub, c4_add_sub, c5_add_sub, c6_add_sub, c7_add_sub;
     wire c0_mul, c1_mul, c2_mul, c3_mul, c4_mul, c5_mul, c6_mul, c7_mul;
     wire c0_div, c1_div, c2_div, c3_div, c4_div, c5_div, c6_div, c7_div;
 
-
-    assign c0 = (op[0] & c0_div) | (~op[0] & c0_mul);
-    assign c1 = (op[0] & c1_div) | (~op[0] & c1_mul);
-    assign c2 = (op[0] & c2_div) | (~op[0] & c2_mul);
-    assign c3 = (op[0] & c3_div) | (~op[0] & c3_mul);
-    assign c4 = (op[0] & c4_div) | (~op[0] & c4_mul);
-    assign c5 = (op[0] & c5_div) | (~op[0] & c5_mul);
-    assign c6 = (op[0] & c6_div) | (~op[0] & c6_mul);
-    assign c7 = (op[0] & c7_div) | (~op[0] & c7_mul);
-
+    
+    assign c0 = (~op[1] & c0_add_sub) | (op[1] & ((~op[0] & c0_mul) | (op[0] & c0_div)));
+    assign c1 = (~op[1] & c1_add_sub) | (op[1] & ((~op[0] & c1_mul) | (op[0] & c1_div)));
+    assign c2 = (~op[1] & c2_add_sub) | (op[1] & ((~op[0] & c2_mul) | (op[0] & c2_div)));
+    assign c3 = (~op[1] & c3_add_sub) | (op[1] & ((~op[0] & c3_mul) | (op[0] & c3_div)));
+    assign c4 = (~op[1] & c4_add_sub) | (op[1] & ((~op[0] & c4_mul) | (op[0] & c4_div)));
+    assign c5 = (~op[1] & c5_add_sub) | (op[1] & ((~op[0] & c5_mul) | (op[0] & c5_div)));
+    assign c6 = (~op[1] & c6_add_sub) | (op[1] & ((~op[0] & c6_mul) | (op[0] & c6_div)));
+    assign c7 = (~op[1] & c7_add_sub) | (op[1] & ((~op[0] & c7_mul) | (op[0] & c7_div)));
 
     reg_4 state_reg(
         .clk(clk),
-        .rst(rst | ~op[1]), // if operation performed is add/sub, the state registers will not work
+        .rst(rst),
         .in(state_nxt),
-        .load(op[1]), // states can be changed only when operation is mul/div
+        .load(1'b1),
         .out(state_curr)
     );
 
+    add_sub_logic add_sub_logic_inst(
+        .enable(1'b1),
+        .state_curr(state_curr),
+        .start(start),
+        .op(op[0]),
+        .state_nxt(state_nxt_add_sub),
+        .c0(c0_add_sub),
+        .c1(c1_add_sub),
+        .c2(c2_add_sub),
+        .c3(c3_add_sub),
+        .c4(c4_add_sub),
+        .c5(c5_add_sub),
+        .c6(c6_add_sub),
+        .c7(c7_add_sub)
+    );
+
     mul_logic mul_logic_inst(
+        .enable(op[1] & ~op[0]),
         .state_curr(state_curr),
         .cnt_done(cnt_done),
         .q0(q0),
         .qm1(qm1),
         .a7(a7),
-        .state_nxt(state_nxt),
+        .start(start),
+        .state_nxt(state_nxt_mul),
         .c0(c0_mul),
         .c1(c1_mul),
         .c2(c2_mul),
@@ -57,11 +84,13 @@ module control_unit (
     );
 
     div_logic div_logic_inst(
+        .enable(op[1] & op[0]),
         .state_curr(state_curr),
         .cnt_done(cnt_done),
         .q0(q0),
         .a7(a7),
-        .state_nxt(state_nxt),
+        .start(start),
+        .state_nxt(state_nxt_div),
         .c0(c0_div),
         .c1(c1_div),
         .c2(c2_div),
@@ -71,5 +100,8 @@ module control_unit (
         .c6(c6_div),
         .c7(c7_div)
     );
+
+    
+
 
 endmodule

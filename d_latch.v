@@ -6,13 +6,11 @@
 module d_latch (
   input d,
   input e,
-  output q,
-  output nq
+  output q
 );
   wire nq_temp;
   wire q_temp;
   assign q_temp = ~ ((~ d & e) | nq_temp);
   assign nq_temp = ~ (q_temp | (e & d));
   assign q = q_temp;
-  assign nq = nq_temp;
 endmodule
