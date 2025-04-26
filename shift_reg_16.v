@@ -7,11 +7,17 @@ module shift_reg_16 (
   input [1:0] load,
   input bit_in,
   input [1:0] sel,
+  input force_q0,
   output [15:0] out,
   output bit_out
 );
   wire [7:0] s0;
   wire [7:0] s1;
+
+  wire [7:0] q_forced_in, q_in;
+  assign q_forced_in = {s0[7:1], bit_in};
+  assign q_in = ({8{force_q0}} & q_forced_in) | ({8{~force_q0}} & in);
+
   wire s2;
   wire s3;
   wire s4;
@@ -22,6 +28,7 @@ module shift_reg_16 (
   assign s2 = ~ sel[0];
   assign s8 = load[0];
   assign s7 = load[1];
+
   Mux_2x1 Mux_2x1_i0 (
     .sel( s2 ),
     .in_0( bit_in ),
@@ -55,8 +62,8 @@ module shift_reg_16 (
   shift_reg_8 shift_reg_8_i4 (
     .clk( clk ),
     .rst( rst ),
-    .in( in ),
-    .load( s8 ),
+    .in( q_in ),
+    .load( s8 | force_q0),
     .sel( sel ),
     .bit_in( s6 ),
     .out( s0 ),
