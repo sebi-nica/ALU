@@ -56,7 +56,7 @@ module top_level_tb;
             out[7:0] = outbus;
             
             if (out !== expected_out)
-                    $display("FAIL: %d + %d = %d, expected %d", in1, in2, out, expected_out);
+                    $display("FAIL: %d + %d = %b, expected %b", in1, in2, out, expected_out);
                 else
                     $display("PASS: %d + %d = %d", in1, in2, out);
             #10;
@@ -92,8 +92,8 @@ module top_level_tb;
     endtask
 
     task multiply;
-        input[7:0] in1, in2;
-        reg signed [15:0] out, expected_out;
+        input signed[7:0] in1, in2;
+        reg signed[15:0] out, expected_out;
 
         begin
             out = 0;
@@ -115,13 +115,14 @@ module top_level_tb;
                     $display("FAIL: %d * %d = %d, expected %d", in1, in2, out, expected_out);
                 else
                     $display("PASS: %d * %d = %d", in1, in2, out);
+            #10;
         end
     endtask
 
     task divide;
         input[15:0] in1;
         input[7:0] in2;
-        reg signed[7:0] out1, out2, expected_out1, expected_out2;
+        reg[7:0] out1, out2, expected_out1, expected_out2;
 
         begin
             out1 = 0; out2 = 0;
@@ -146,6 +147,7 @@ module top_level_tb;
                     $display("FAIL: %d / %d = %d | R: %d, expected %d | R: %d", in1, in2, out1, out2, expected_out1, expected_out2);
                 else
                     $display("PASS: %d / %d = %d | R: %d", in1, in2, out1, out2);
+            #10;
         end
     endtask
 
@@ -154,9 +156,10 @@ module top_level_tb;
     integer i;
     reg signed[7:0] a, b;
     begin
+        $display("SIMULATING %0d ADDITIONS", n);
         for (i = 0; i < n; i = i + 1) begin
             a = $random;
-            b = $random;
+            b = $random;    
             add(a, b);
         end
     end
@@ -167,6 +170,7 @@ module top_level_tb;
     integer i;
     reg signed[7:0] a, b;
     begin
+        $display("SIMULATING %0d SUBTRACTIONS", n);
         for (i = 0; i < n; i = i + 1) begin
             a = $random;
             b = $random;
@@ -175,15 +179,47 @@ module top_level_tb;
     end
     endtask
 
+    task randomMultiply;
+    input integer n;
+    integer i;
+    reg signed[7:0] a, b;
+    begin
+        $display("SIMULATING %0d MULTIPLICATIONS", n);
+        for (i = 0; i < n; i = i + 1) begin
+            a = $random;
+            b = $random;    
+            multiply(a, b);
+        end
+    end
+    endtask
+
+    task randomDivide;
+    input integer n;
+    integer i;
+    reg[15:0] a;
+    reg[7:0] b;
+    begin
+        $display("SIMULATING %0d DIVISIONS", n);
+        b[7] = 0;
+        for (i = 0; i < n; i = i + 1) begin
+            b[6:0] = $random;
+            a[7:0] = $random;
+            a[15:8] = $random % b;
+            divide(a, b);
+        end
+    end
+    endtask
+
 
     initial begin
-
+        $random($time);
         start = 0; op = 2'b00; inbus = 8'h00;
         rst = 1; #20; rst = 0;
         
         randomAdd(8);
-
         randomSubtract(8);
+        randomMultiply(8);
+        randomDivide(8);
 
         $stop;
     end

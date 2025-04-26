@@ -57,6 +57,8 @@ assign add_op = c3;
 
 assign aq_in = {8{~c2}} & in | {8{c2}} & add_temp_result;
 
+
+
     shift_reg_16 AQ(
         .clk(clk),
         .rst(rst | internal_rst),
