@@ -30,19 +30,19 @@ The top-level interface of the ALU operates as follows:
    - The first part of the result (quotient in the case of division) is provided on the same clock cycle as the *finish* signal is on. The second part of the result (remainder in the case of division) is provided in the following clock cycle.
 
 ### Example of I/O cycle:
-![*image could not load*](image/sim.png)
+![*image could not load*](images/sim.png)
 
 ## **System Diagram**
 
 ### Main modules:
  - `control_unit`: handles the FSM state registers and sends the *arithmetic_unit* control signals
  - `arithmetic_unit`: does operations on the numbers when the *control_unit* tells it to
-![*image could not load*](image/diagram1.png)
+![*image could not load*](images/diagram1.png)
 
 ## **Components**
 
 ### control_unit
-![*image could not load*](image/diagram2.png)
+![*image could not load*](images/diagram2.png)
 control unit description goes here
 
 ### arithmetic_unit
@@ -53,11 +53,11 @@ arithmetic unit description goes here
 
 ### multiplication
 The algorithm implemented for multiplication is Booth Radix-2
-![*image could not load*](image/diagram4.png)
+![*image could not load*](images/diagram4.png)
 
 ### division
 The algorithm implemented for division is Restoring Division
-![*image could not load*](image/diagram5.png)
+![*image could not load*](images/diagram5.png)
 
 ## **Resources**
 
