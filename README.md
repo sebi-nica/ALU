@@ -41,22 +41,25 @@ The top-level interface of the ALU operates as follows:
 
 ## **Components**
 
-### control_unit
-![*image could not load*](images/diagram2.png)
-control unit description goes here
-
 ### arithmetic_unit
-![*image could not load*](image/diagram3.png)
+![*image could not load*](image/diagram2.png)
 arithmetic unit description goes here
+
+### control_unit
+![*image could not load*](images/diagram3.png)
+control unit description goes here
 
 ## **Complex operations**
 
 ### multiplication
 The algorithm implemented for multiplication is Booth Radix-2
+
 ![*image could not load*](images/diagram4.png)
 
 ### division
 The algorithm implemented for division is Restoring Division
+
+
 ![*image could not load*](images/diagram5.png)
 
 ## **Resources**
