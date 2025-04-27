@@ -80,11 +80,20 @@ The algorithm implemented for division is Restoring Division
 
 ![*image could not load*](images/diagram5.png)
 
+## **Testbench**
+
+The `top_level_tb.v` file contains tasks that use all 4 operations and verifies correctness by comparing the ALU's output to expected results calculated directly in the testbench. There are also tasks for doing this a large number of times with randomly generated numbers.
+
+## **Limitations**
+
+Addition, subtraction and multiplication work for **any** number that can be displayed on 8 bits in C2 format.
+The ALU can only perform unsigned division, so it acts like both the dividend and the divisor are unsigned. Also, the divisor must not be greater than 127 (the divisor's MSB must be 0).
+
 ## **Resources**
 
 - [ModelSim](https://www.intel.com/content/www/us/en/software-kit/750368/modelsim-intel-fpgas-standard-edition-software-version-18-1.html) - simulating the ALU
 - [Digital](https://github.com/hneemann/Digital) - designing the low-level circuits like shift register, counter and adder
-- [LogicFriday](https://download.cnet.com/logic-friday/3000-20415_4-75848245.html?ex=WLS-2202.2) - next-state FSM logic
+- [Logic Friday](https://download.cnet.com/logic-friday/3000-20415_4-75848245.html?ex=WLS-2202.2) - next-state FSM logic
 - [Drawio](https://www.drawio.com) - the diagrams and flowcharts seen in this README
 
 
