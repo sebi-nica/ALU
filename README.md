@@ -39,15 +39,33 @@ The top-level interface of the ALU operates as follows:
  - `arithmetic_unit`: does operations on the numbers when the *control_unit* tells it to
 ![*image could not load*](images/diagram1.png)
 
-## **Components**
+## **arithmetic_unit**
+![*image could not load*](images/diagram2.png)
+#### Modules:
+ - **`shift_reg_16`**: 16-bit shift register that holds A and Q.
+ - **`extraQ`**: 1-bit register to hold Q[-1]. Is only needed for multiplication.
+ - **`adder`**: 8-bit adder. Can also be used as a subtractor.
+ - **`counter`**: 3-bit counter. Only increments when a signal `incr` is active.
+ - **`reg_8`**: 8-bit register used to hold M.
 
-### arithmetic_unit
-![*image could not load*](image/diagram2.png)
-arithmetic unit description goes here
-
-### control_unit
+## **control_unit**
 ![*image could not load*](images/diagram3.png)
-control unit description goes here
+### Modules:
+ - **`reg_4`**: 4-bit register to hold the current state of the FSM
+ - **`logic modules`**: as each operation has its own set of steps, each has its own FSM. In my design, I chose to use a single 4-bti register that is shared by all of the FSM's. I achieved this by only enabling the logic module corresponding the current operation. Additionally, to prevent choosing the wrong state, the output of each logic module is MUX'd based on the `op` signal. There is one logic module for *multiplication*, 1 for *division* while *addition* and *subtraction* share a module
+
+### Control signals:
+- `c0`: load input to M
+- `c1`: load input to Q
+- `c2`: load result from adder to A
+- `c3`: tell adder which operation to do 0=add 1=sub
+- `c4`: = enable_shift = while this is on, A and Q will shift on every clock cycle, shift direction depends on operation 
+- `c5`: = increment counter = while this is on, cnt will increment on every clock cycle
+- `c6`: input bit for bit shift
+- `c7`: load A to outbus
+- `c8`: load Q to outbus
+- `c9`: load input to A
+- `c10`: only load Q[0] with value from c6
 
 ## **Complex operations**
 
